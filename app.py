@@ -89,21 +89,21 @@ with tab1:
         st.markdown("### 🔍 Live Preview")
         if len(raw_ids_labels) > 0:
             preview_img = generate_label(raw_ids_labels[0], width_mm, height_mm, dpi, qr_scale, qr_margin_x, qr_spacing, font_size, text_x_offset)
-            st.image(preview_img, use_container_width=True, caption=f"Preview: {raw_ids_labels[0]}")
+            # Updated to width="stretch"
+            st.image(preview_img, width="stretch", caption=f"Preview: {raw_ids_labels[0]}")
             
             st.markdown("---")
-            if st.button("📦 Generate Bulk Labels PDF", type="primary", use_container_width=True):
+            # Updated to width="stretch"
+            if st.button("📦 Generate Bulk Labels PDF", type="primary", width="stretch"):
                 progress_bar = st.progress(0, text="Generating PDF...")
                 pdf_buffer = io.BytesIO()
                 
                 images = []
                 for i, uid in enumerate(raw_ids_labels):
                     img = generate_label(uid, width_mm, height_mm, dpi, qr_scale, qr_margin_x, qr_spacing, font_size, text_x_offset)
-                    # Convert to RGB to ensure PDF compatibility
                     images.append(img.convert('RGB'))
                     progress_bar.progress((i + 1) / len(raw_ids_labels), text=f"Processing {i+1} of {len(raw_ids_labels)}...")
                 
-                # Compile all images into a single multi-page PDF
                 if images:
                     images[0].save(
                         pdf_buffer, 
@@ -115,7 +115,8 @@ with tab1:
                 
                 progress_bar.empty()
                 st.success("✅ Labels PDF generated successfully!")
-                st.download_button("Download Print-Ready PDF", data=pdf_buffer.getvalue(), file_name="Dual_QR_Labels.pdf", mime="application/pdf", use_container_width=True)
+                # Updated to width="stretch"
+                st.download_button("Download Print-Ready PDF", data=pdf_buffer.getvalue(), file_name="Dual_QR_Labels.pdf", mime="application/pdf", width="stretch")
         else:
             st.warning("Please paste at least one ID.")
 
@@ -137,7 +138,8 @@ with tab2:
         add_upi_prefix = st.checkbox("Format as Scannable Payment Link", value=True, help="Adds 'upi://pay?pa=' to the ID.")
         payee_name = st.text_input("Default Payee Name (Optional):", value="", help="Adds &pn=Name to the QR code.")
         
-        if st.button("🚀 Generate UPI QRs PDF", type="primary", use_container_width=True):
+        # Updated to width="stretch"
+        if st.button("🚀 Generate UPI QRs PDF", type="primary", width="stretch"):
             if not raw_ids_upi:
                 st.error("Please enter at least one UPI ID.")
             else:
@@ -167,4 +169,5 @@ with tab2:
                         
                 prog_upi.empty()
                 st.success(f"✅ Generated PDF with {len(raw_ids_upi)} UPI QR codes!")
-                st.download_button("📦 Download UPI QRs PDF", data=pdf_buffer_upi.getvalue(), file_name="Bulk_UPI_QRCodes.pdf", mime="application/pdf", use_container_width=True)
+                # Updated to width="stretch"
+                st.download_button("📦 Download UPI QRs PDF", data=pdf_buffer_upi.getvalue(), file_name="Bulk_UPI_QRCodes.pdf", mime="application/pdf", width="stretch")
